@@ -6,6 +6,8 @@ import math
 import cv2
 import config
 import shutil
+import yt_dlp
+import reedsolo
 from tqdm import tqdm
 from screeninfo import get_monitors
 from pathlib import Path    
@@ -19,6 +21,8 @@ VID_OUT_DIR = "vids"
 CODEC = 0
 OUT_VIDEO_FILE = 'out_video.avi'
 FPS = 30
+
+RSCODEC = reedsolo.RSCodec(10)  # 10 bytes of error correction
 
 os.makedirs(IMG_OUT_DIR, exist_ok=True)
 os.makedirs(VID_OUT_DIR, exist_ok=True)

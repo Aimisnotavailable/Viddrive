@@ -1,8 +1,6 @@
 from config import *
 
 class FastDecoder:
-    def __init__(self):
-        pygame.init()
 
     def decode_helper(self, video_file=None):
         pixel_chunks = []
@@ -12,13 +10,13 @@ class FastDecoder:
             success, frame = cap.read()
             if not success: break
             
-            # OpenCV is BGR. Convert to RGB for consistency with your Encoder
-            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            # # OpenCV is BGR. Convert to RGB for consistency with your Encoder
+            # rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
             # In the encoder, you transposed (H, W, 3) -> (W, H, 3) 
             # But OpenCV frames are (H, W, 3). 
             # To get the linear bitstream back, just flatten the H, W
-            pixels = rgb.reshape(-1, 3)
+            pixels = frame.reshape(-1, 3)
 
             # FUZZY Stop Signal Check (Important for Video!)
             is_blue = (pixels[:, 0] < 50) & (pixels[:, 1] < 50) & (pixels[:, 2] > 200)
