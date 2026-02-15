@@ -2,8 +2,8 @@ from config import *
 
 try:
     m = get_monitors()[0]
-    W, H = m.width, m.height
-    # W, H = 300, 420
+    # W, H = m.width, m.height
+    W, H = 120, 360
 except:
     W, H = 1920, 1080
 
@@ -37,7 +37,7 @@ class FastEncoder:
         print(f"Encoding {total_bits} bits into {total_frames} frames ({W}x{H})...")
 
         # 3. Process Chunk by Chunk
-        for i in range(total_frames):
+        for i in tqdm(range(total_frames), desc="🎨 Rendering Frames", unit="frame"):
             start = i * pixels_per_frame
             end = start + pixels_per_frame
             
@@ -70,7 +70,7 @@ class FastEncoder:
             filename = os.path.join(IMG_OUT_DIR, f"{i:05d}.png")
             pygame.image.save(self.screen, filename)
             print(f"Saved frame {i+1}/{total_frames}: {filename}")
-
+            # os.system("cls" if os.name == "nt" else "clear")
 
         print("Encoding complete. Generating video...")
         self.generate_video(VID_PATH / OUT_VIDEO_FILE)
@@ -90,7 +90,7 @@ class FastEncoder:
         height, width = first_frame.shape[:2]
         video = cv2.VideoWriter(str(output_file), CODEC, FPS, (width, height))
 
-        for name in imgs:
+        for name in tqdm(imgs, desc="🎬 Assembling Video", unit="img"):
             img_path = IMG_PATH / name
             frame = cv2.imread(str(img_path))
             if frame is None:
@@ -100,6 +100,13 @@ class FastEncoder:
 
         video.release()
         print(f"Video saved to {output_file}")
+
+        print("Cleaning up image files...")
+        try:
+            shutil.rmtree(IMG_OUT_DIR)
+            print(f"Successfully cleaned up {IMG_OUT_DIR}")
+        except Exception as e:
+            print(f"Error cleaning up: {e}")
 
 e = FastEncoder()
 e.encode("hehe.mp4")
